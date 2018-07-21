@@ -1,5 +1,10 @@
 #!/bin/bash
 
+install_ssh_server()
+{
+    sudo apt-get install openssh-server
+}
+
 generate_keys()
 {
     ssh-keygen -b 2048 -t rsa
@@ -17,5 +22,6 @@ if [ $# != 2 ]; then
     exit 1
 fi
 
+install_ssh_server
 generate_keys
 copy_keys $1 $2

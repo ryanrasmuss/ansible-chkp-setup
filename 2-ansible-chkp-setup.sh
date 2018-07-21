@@ -157,7 +157,7 @@ fi
 check_internet
 
 stty -echo
-printf "Management Server's \"user\" $2 password: " password
+printf "Management Server's user \"$2\" password: " password
 read password
 stty echo
 printf "\n"
