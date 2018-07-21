@@ -31,8 +31,8 @@ Example:
 
 - I have a linux server with hostname ``ubuntu`` and user ``ansible``. This linux server has internet access and can ssh into the Check Point R80.10 Management Server.
 - I have a R80.10 Management Server with hostname ``Mgmt-Server``, user ``admin`` with default shell as ``/bin/bash`` (not ``clish``), and ip-address ``192.168.1.254``. I already completed the first time wizard, changed the Management API Settings to ``All IP Addresses that can be used for GUI clients``, and ran ``api restart`` on the Management Server.
-- I run ``./1-setup-keys.sh api 192.168.1.254`` (**not** as root!)
-- I run ``sudo ./2-ansible-chkp-setup.sh ansible api Mgmt-Server 192.168.1.254`` and follow all of the prompts. Will ask password for local linux server and R80.10 Management server.
+- I run ``./1-setup-keys.sh admin 192.168.1.254`` (**not** as root!)
+- I run ``sudo ./2-ansible-chkp-setup.sh ansible admin Mgmt-Server 192.168.1.254`` and follow all of the prompts. Will ask password for local linux server and R80.10 Management server.
 - Finally, I run ``./3-cp-ansible-test.yml`` and everything looks green.
 - Done.
 
@@ -65,11 +65,9 @@ Overview of ``3-cp-ansible-test.yml``
 
 ### 4. User with ``/bin/bash``
 
-In order to run remote bash scripts on the Management server the following two options can be done.
+Change the default shell of the ``admin`` user on the Management Server to ``/bin/bash``. This can be completed via clish command: ``set user admin shell /bin/bash``. Run ``save config`` afterwards. Use ``admin`` for the "Mgmt Server User" parameter in the scripts.
 
-1. Change the default shell of the ``admin`` user on the Management Server to ``/bin/bash``. This can be completed via clish command: ``set user admin shell /bin/bash``. Run ``save config`` afterwards. Use ``admin`` for the "Mgmt Server User" parameter in the scripts.
-
-2. Or create another user via the following clish commands: ``add user api uid 1337 homedir /home/api``, ``set user api password``, ``add rba user api roles adminRole``, and ``save config``. You can change the user from ``api`` to whatever you would like. Remember to use this user for the "Mgmt Server User" parameter in the scripts.
+After finishing this setup, you can change the shell back via ``set user admin shell /etc/cli.sh`` and ``save config``
 
 ### 5. Misc
 

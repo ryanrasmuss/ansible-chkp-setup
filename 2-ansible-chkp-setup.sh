@@ -83,9 +83,8 @@ install_sdk_and_api()
 {
     # uncomment the library line
     sed -i 's/#library/library/g' $config_file
-
+    # get the sdk
     git clone --recursive https://github.com/CheckPoint-APIs-Team/cpAnsible
-    # if cpAnsible/cp_mgmt_api_python does not exist git clone it
 }
 
 migrate_files()
@@ -94,10 +93,6 @@ migrate_files()
     mv -v cpAnsible/check_point_mgmt/check_point_mgmt.py $module_dir
     mv -v cpAnsible/check_point_mgmt/cp_mgmt_api_python_sdk $python_lib
 }
-
-# test python can call api
-# test function
-# python -option to run command
 
 # fill invetory file
 # requires $1 := user of ansible server
@@ -109,9 +104,7 @@ init_inventory()
 {
     echo "[$3]" >> $ansible_inventory
     echo "127.0.0.1" >> $ansible_inventory
-
     echo "[$3:vars]" >> $ansible_inventory
-    # XXX: check this
     echo "ansible_user=$1" >> $ansible_inventory
     echo "mgmt_server=$4" >> $ansible_inventory
     echo "appliance_name=$3" >> $ansible_inventory
@@ -131,22 +124,15 @@ get_fingerprint()
     echo -e $payload > $payload_temp
 
     # Run payload on mgmt server
-
     cat $payload_temp | ssh $1@$2 "bash -"
 
     # get fingerprint 
-
     scp $1@$2:$finger_file .
     rm $payload_temp
     ssh -t $1@$2 "rm $finger_file"
 
     # move contents to inventory file
     cat -v $finger_file >> $inventory_file
-
-    # Inform that fingerprint.txt exists and has been copied to inventory
-    #printf "\e[1;28m$finger_file has been made!\e[0m\n"
-    #printf "\e[1;28mContents of $finger_file has been appended to $inventory_file\e[0m\n"
-    #echo "Have a great day!"
 }
 
 prepare_test_file()
@@ -171,7 +157,7 @@ fi
 check_internet
 
 stty -echo
-printf "Manager Server's user $2 password: " password
+printf "Management Server's \"user\" $2 password: " password
 read password
 stty echo
 printf "\n"
