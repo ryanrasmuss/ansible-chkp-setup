@@ -7,6 +7,7 @@ By:   **Ryan Rasmuss**
 A fresh install of one of the following (tested) Linux Distros:
 
 - [ubuntu 16.04 LTS Server 64-bit](http://releases.ubuntu.com/16.04/)
+- [ubuntu 16.04 LTS Desktop 64-bit](http://releases.ubuntu.com/16.04/)
 
 A R80.10 Management Server with the following tasks completed:
 
