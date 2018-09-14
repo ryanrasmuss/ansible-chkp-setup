@@ -46,7 +46,7 @@ check_root()
     fi
 }
 
-check_connectivity()
+check_internet()
 {
     echo "Checking for internet connection.."
 
