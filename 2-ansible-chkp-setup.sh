@@ -116,6 +116,10 @@ init_inventory()
 
 get_fingerprint()
 {
+    #root needs to copy its key over
+    ssh-keygen -t rsa -b 4096
+    ssh-copy-id $1@$2
+    
     finger_file=fingerprint.txt
     inventory_file=/etc/ansible/hosts
     payload_temp=fingerpaint.sh
