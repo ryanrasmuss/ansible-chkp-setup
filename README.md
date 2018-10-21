@@ -22,11 +22,11 @@ A R80.10 Management Server with the following tasks completed:
 
 ### Quick Start
 
-1. Run script ``./1-setup-keys.sh`` **not** as root.
+1. Unless you already have SSH keys setup between this server and your Check Point Management server, run the script ``./1-setup-keys.sh`` **not** as root. This will generate a pair of keys between this server and the management server.
 
 2. Run script ``sudo ./2-ansible-chkp-setup.sh`` (note the sudo!) and follow the prompts. This script will ask for user input. Be prepared to enter the linux server's password and the Check Point Management Server's password. Type 'y' or '[ENTER]' when in doubt.
 
-3. Run script ``ansible-playbook 3-cp-ansible-test.yml`` to test Ansible. If you get all green text you are good to go!
+3. Run script ``ansible-playbook 3-cp-ansible-test.yml`` to test Ansible. If you get no scary red text, you are good to go!
 
 Example:
 
@@ -34,7 +34,7 @@ Example:
 - I have a R80.10 Management Server with hostname ``Mgmt-Server``, user ``admin`` with default shell as ``/bin/bash`` (not ``clish``), and ip-address ``192.168.1.254``. I already completed the first time wizard, changed the Management API Settings to ``All IP Addresses that can be used for GUI clients``, and ran ``api restart`` on the Management Server.
 - I run ``./1-setup-keys.sh admin 192.168.1.254`` (**not** as root!)
 - I run ``sudo ./2-ansible-chkp-setup.sh ansible admin Mgmt-Server 192.168.1.254`` and follow all of the prompts. Will ask password for local linux server and R80.10 Management server.
-- Finally, I run ``./3-cp-ansible-test.yml`` and everything looks green.
+- Finally, I run ``ansible-playbook 3-cp-ansible-test.yml`` and i'm ready to build some playbooks.
 - Done.
 
 ### 3. What I do

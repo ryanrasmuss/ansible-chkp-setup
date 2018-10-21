@@ -41,7 +41,7 @@ usage()
 check_root()
 {
     if [ $(id -u) != 0 ]; then
-        printf "\e[1;41mHi! Please run a root!\e[0m\n"
+        printf "\e[1;41mPlease run as root!\e[0m\n"
         exit 1
     fi
 }
@@ -60,23 +60,23 @@ check_internet()
 
 updates()
 {
-    apt-get update
-    apt-get upgrade
+    apt-get update -y
+    apt-get upgrade -y
 }
 
 install_reqs()
 {
-    apt-get install git
-    apt-get install python2.7
-    apt-get install openssh-server
+    apt-get install git -y
+    apt-get install python2.7 -y
+    apt-get install openssh-server -y
 }
 
 install_ansible()
 {
-    apt-get install software-properties-common
-    apt-add-repository ppa:ansible/ansible
-    apt-get update
-    apt-get install ansible
+    apt-get install software-properties-common -y
+    apt-add-repository ppa:ansible/ansible -y
+    apt-get update -y
+    apt-get install ansible -y
 }
 
 install_sdk_and_api()
@@ -116,24 +116,32 @@ init_inventory()
 
 get_fingerprint()
 {
-    #root needs to copy its key over
-    ssh-keygen -t rsa -b 4096
-    ssh-copy-id $1@$2
+    #root needs to copy its key over to avoid a bunch of prompts
+    # XXX: don't need to generate separate keys, just use ssh -i
+    #ssh-keygen -t rsa -b 4096
+    #ssh-copy-id $1@$2
+    id="/home/$1/.ssh/id_rsa"
     
     finger_file=fingerprint.txt
     inventory_file=/etc/ansible/hosts
     payload_temp=fingerpaint.sh
     payload="finger_file=fingerprint.txt\napi fingerprint | grep SHA1 | cut -c 7- > \$finger_file\necho -e \"fingerprint=\$(cat \$finger_file)\" > \$finger_file"
 
+    # make a payload file
     echo -e $payload > $payload_temp
 
     # Run payload on mgmt server
-    cat $payload_temp | ssh $1@$2 "bash -"
+    cat $payload_temp | ssh -i $id $2@$3 "bash -"
 
     # get fingerprint 
-    scp $1@$2:$finger_file .
+    scp -i $id $2@$3:$finger_file .
+    # delete payload file
     rm $payload_temp
-    ssh -t $1@$2 "rm $finger_file"
+    # remove generate finger file on server side
+    ssh -i $id -t $2@$3 "rm $finger_file"
+
+    # Delete authorized key on management server
+    ssh -i $id -t $2@$3 "sed -i '\$d' .ssh/authorized_keys"
 
     # move contents to inventory file
     cat -v $finger_file >> $inventory_file
@@ -172,7 +180,7 @@ install_ansible
 install_sdk_and_api
 migrate_files
 init_inventory $1 $2 $3 $4 $password
-get_fingerprint $2 $4 
+get_fingerprint $1 $2 $4 
 prepare_test_file $3
 
 echo "------------------------------👌  Done 👌 ----------------------------------"

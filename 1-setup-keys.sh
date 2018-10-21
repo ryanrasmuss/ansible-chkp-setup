@@ -2,12 +2,12 @@
 
 install_ssh_server()
 {
-    sudo apt-get install openssh-server
+    sudo apt-get install openssh-server -y
 }
 
 generate_keys()
 {
-    ssh-keygen -b 2048 -t rsa
+    ssh-keygen -b 4096 -t rsa
 }
 
 copy_keys()
