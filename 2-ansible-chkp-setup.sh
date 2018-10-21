@@ -58,6 +58,17 @@ check_internet()
     fi
 }
 
+check_connection()
+{
+    echo "Checking communication with Management Server: $1"
+    if ping -c 1 $1 &> /dev/null; then
+        echo "Connectivity okay"
+    else
+        echo "No connection to management server. Quitting."
+        exit 1
+    fi
+}
+
 updates()
 {
     apt-get update -y
@@ -116,12 +127,8 @@ init_inventory()
 
 get_fingerprint()
 {
-    #root needs to copy its key over to avoid a bunch of prompts
-    # XXX: don't need to generate separate keys, just use ssh -i
-    #ssh-keygen -t rsa -b 4096
-    #ssh-copy-id $1@$2
+    # Find identity file
     id="/home/$1/.ssh/id_rsa"
-    
     finger_file=fingerprint.txt
     inventory_file=/etc/ansible/hosts
     payload_temp=fingerpaint.sh
@@ -139,9 +146,6 @@ get_fingerprint()
     rm $payload_temp
     # remove generate finger file on server side
     ssh -i $id -t $2@$3 "rm $finger_file"
-
-    # Delete authorized key on management server
-    ssh -i $id -t $2@$3 "sed -i '\$d' .ssh/authorized_keys"
 
     # move contents to inventory file
     cat -v $finger_file >> $inventory_file
@@ -180,6 +184,7 @@ install_ansible
 install_sdk_and_api
 migrate_files
 init_inventory $1 $2 $3 $4 $password
+check_connection $4
 get_fingerprint $1 $2 $4 
 prepare_test_file $3
 
