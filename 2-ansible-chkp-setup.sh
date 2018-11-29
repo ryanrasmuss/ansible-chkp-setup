@@ -21,12 +21,17 @@ ansible_inventory=/etc/ansible/hosts
 # Ansible Test Playbook
 test_file=3-cp-ansible-test.yml
 
+OS=``cat /etc/os-release | grep ^ID= | cut -c 4-``
+
 banner()
 {
     echo "--------------------------------- Hi -------------------------------------"
+    echo "Detected OS Version: $OS"
     echo "Here are some reminders before running this script!"
     echo "Edit API Settings on Smart Console via Manage & Settings -> Blades"
     echo "Run \"api restart\" on the management server"
+    echo "If you have not yet setup ssh-keys for localhost & Management Server.."
+    echo ".. then run 1-setup-keys.sh (not as root / no sudo) first."
     echo "--------------------------------------------------------------------------"
 }
 
@@ -84,9 +89,13 @@ install_reqs()
 
 install_ansible()
 {
-    apt-get install software-properties-common -y
-    apt-add-repository ppa:ansible/ansible -y
-    apt-get update -y
+# For Ubuntu Release 16.04
+#    apt-get install software-properties-common -y
+#    apt-add-repository ppa:ansible/ansible -y
+#    apt-get update -y
+# For Ubuntu Release 18.01
+    add-apt-repository universe
+# For all releases
     apt-get install ansible -y
 }
 
@@ -171,6 +180,7 @@ if [ $# != 4 ]; then
 fi
 
 check_internet
+check_connection $4
 
 stty -echo
 printf "Management Server's user \"$2\" password: " password
@@ -178,13 +188,12 @@ read password
 stty echo
 printf "\n"
 
-updates
+#updates
 install_reqs
 install_ansible
 install_sdk_and_api
 migrate_files
 init_inventory $1 $2 $3 $4 $password
-check_connection $4
 get_fingerprint $1 $2 $4 
 prepare_test_file $3
 
