@@ -21,7 +21,7 @@ ansible_inventory=/etc/ansible/hosts
 # Ansible Test Playbook
 test_file=3-cp-ansible-test.yml
 
-OS=``cat /etc/os-release | grep ^ID= | cut -c 4-``
+OS=$(``cat /etc/os-release | grep ^ID= | cut -c 4-``)
 
 banner()
 {
@@ -89,14 +89,31 @@ install_reqs()
 
 install_ansible()
 {
+    
+    OS_Version=$(``cat /etc/os-release | grep VERSION_ID | cut -c 12-``)
+    
+    # For Ubuntu 16.04
+    if [ $OS_Version -eq "\"16.04\"" ]; then
+        echo "Detected OS_Version: $OS_Version"
+        apt-get install software-properties-common -y
+        apt-add-repository ppa:ansible/ansible -y
+        apt-get update -y
+    # For Everything else (Including 18.01)
+    else
+        echo "Detected OS_Version: $OS_Version"
+        add-apt-repository universe
+    fi
+
+    apt-get update -y
+    apt-get install ansible -y
 # For Ubuntu Release 16.04
 #    apt-get install software-properties-common -y
 #    apt-add-repository ppa:ansible/ansible -y
 #    apt-get update -y
 # For Ubuntu Release 18.01
-    add-apt-repository universe
+    #add-apt-repository universe
 # For all releases
-    apt-get install ansible -y
+    #apt-get install ansible -y
 }
 
 install_sdk_and_api()
