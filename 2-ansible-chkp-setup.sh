@@ -26,7 +26,7 @@ OS=$(``cat /etc/os-release | grep ^ID= | cut -c 4-``)
 banner()
 {
     echo "--------------------------------- Hi -------------------------------------"
-    echo "Detected OS Version: $OS"
+    echo "Detected OS: $OS"
     echo "Here are some reminders before running this script!"
     echo "Edit API Settings on Smart Console via Manage & Settings -> Blades"
     echo "Run \"api restart\" on the management server"
@@ -93,27 +93,23 @@ install_ansible()
     OS_Version=$(``cat /etc/os-release | grep VERSION_ID | cut -c 12-``)
     
     # For Ubuntu 16.04
-    if [ $OS_Version -eq "\"16.04\"" ]; then
+    if [ $OS_Version == "\"16.04\"" ]; then
         echo "Detected OS_Version: $OS_Version"
-        apt-get install software-properties-common -y
-        apt-add-repository ppa:ansible/ansible -y
-        apt-get update -y
+        echo "Getting software-properties-common.."
+        apt-get install software-properties-common -y &> /dev/null
+        echo "Adding ppa:ansible repo.."
+        apt-add-repository ppa:ansible/ansible -y &> /dev/null
     # For Everything else (Including 18.01)
     else
         echo "Detected OS_Version: $OS_Version"
-        add-apt-repository universe
+        echo "Adding universe repo.."
+        add-apt-repository universe &> /dev/null
     fi
 
-    apt-get update -y
+    echo "Updating.."
+    apt-get update -y &> /dev/null
+    echo "Installing ansible.."
     apt-get install ansible -y
-# For Ubuntu Release 16.04
-#    apt-get install software-properties-common -y
-#    apt-add-repository ppa:ansible/ansible -y
-#    apt-get update -y
-# For Ubuntu Release 18.01
-    #add-apt-repository universe
-# For all releases
-    #apt-get install ansible -y
 }
 
 install_sdk_and_api()
@@ -205,7 +201,7 @@ read password
 stty echo
 printf "\n"
 
-#updates
+updates
 install_reqs
 install_ansible
 install_sdk_and_api

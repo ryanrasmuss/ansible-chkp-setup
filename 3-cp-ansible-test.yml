@@ -1,5 +1,5 @@
 ---
-- hosts:
+- hosts: vm-mgmt
   tasks:
   - name: "login"
     check_point_mgmt:
