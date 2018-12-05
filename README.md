@@ -10,12 +10,12 @@ A fresh install of one of the following (tested) Linux Distros:
 - [ubuntu 16.04 LTS Desktop 64-bit](http://releases.ubuntu.com/16.04/)
 - [ubuntu 18.04.1 LTS Server 64-bit](http://releases.ubuntu.com/18.04/)
 
-A R80.10 Management Server with the following tasks completed:
+A R80.xx Management Server with the following tasks completed:
 
 - First Time Wizard Completed.
 - In SmartConsole, edit your API settings via Manage & Settings -> Blades -> Management API -> Advanced Settings...
-- Run ``api restart`` on the management server after changing api settings.
-- Connectivity between your soon-to-be Ansible server and Check Point Management Server.
+- Remember to run ``api restart`` on the management server after changing api settings.
+- Connectivity between your soon-to-be Ansible server and Check Point Management Server (this script will do a ping test).
 - The ability to establish SSH connections between soon-to-be Ansible server and Check Point Management Server.
 - Internet access for the soon-to-be Ansible server.
 - A user on Management server w/ ``/bin/bash`` as default shell (see Section "User with ``bin/bash``").
