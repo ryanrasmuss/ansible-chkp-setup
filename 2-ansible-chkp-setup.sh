@@ -116,6 +116,8 @@ install_sdk_and_api()
 {
     # uncomment the library line
     sed -i 's/#library/library/g' $config_file
+    # silence dict to type string warnings
+    sed -i '/\[defaults\]/a string_conversion_action\ \=\ ignore' $config_file
     # get the sdk
     git clone --recursive https://github.com/CheckPoint-APIs-Team/cpAnsible
 }
