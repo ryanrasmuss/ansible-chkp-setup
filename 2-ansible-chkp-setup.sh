@@ -123,10 +123,11 @@ install_sdk_and_api()
     git clone --recursive https://github.com/CheckPoint-APIs-Team/cpAnsible
     # clone the sdk
     git clone https://github.com/CheckPointSW/cp_mgmt_api_python_sdk
+    # get pip
+    sudo apt install python-pip -y
     # install the sdk
     echo "Installing Check Point SDK for Ansible"
     pip install cp_mgmt_api_python_sdk/
-
 }
 
 migrate_files()
