@@ -85,6 +85,7 @@ install_reqs()
     apt-get install git -y
     apt-get install python2.7 -y
     apt-get install openssh-server -y
+    apt install python-pip
 }
 
 install_ansible()
@@ -118,8 +119,14 @@ install_sdk_and_api()
     sed -i 's/#library/library/g' $config_file
     # silence dict to type string warnings
     sed -i '/\[defaults\]/a string_conversion_action\ \=\ ignore' $config_file
-    # get the sdk
+    # clone check point rep
     git clone --recursive https://github.com/CheckPoint-APIs-Team/cpAnsible
+    # clone the sdk
+    git clone https://github.com/CheckPointSW/cp_mgmt_api_python_sdk
+    # install the sdk
+    echo "Installing Check Point SDK for Ansible"
+    pip install cp_mgmt_api_python_sdk/
+
 }
 
 migrate_files()
