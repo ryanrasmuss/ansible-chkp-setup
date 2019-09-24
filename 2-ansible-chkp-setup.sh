@@ -85,7 +85,6 @@ install_reqs()
     apt-get install git -y
     apt-get install python2.7 -y
     apt-get install openssh-server -y
-    apt install python-pip
 }
 
 install_ansible()
